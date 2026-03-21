@@ -162,6 +162,346 @@
   --sidebar-ring: oklch(0.72 0.115 245);
 }
 
+/* =============================================================
+   THEME: Olive Garden
+   #606C38 Olive Leaf | #283618 Black Forest | #FEFAE0 Cornsilk
+   #DDA15E Light Caramel | #BC6C25 Copper
+   ============================================================= */
+
+[data-palette="olive-garden"] {
+  --background: oklch(0.98 0.01 95);
+  --foreground: oklch(0.25 0.04 130);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.04 130);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.04 130);
+  --primary: oklch(0.52 0.09 130);
+  --primary-foreground: oklch(0.98 0.01 95);
+  --secondary: oklch(0.96 0.02 95);
+  --secondary-foreground: oklch(0.25 0.04 130);
+  --muted: oklch(0.95 0.015 95);
+  --muted-foreground: oklch(0.48 0.05 130);
+  --accent: oklch(0.96 0.02 95);
+  --accent-foreground: oklch(0.25 0.04 130);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.88 0.03 95);
+  --input: oklch(0.88 0.03 95);
+  --ring: oklch(0.52 0.09 130);
+  --chart-1: oklch(0.52 0.09 130);
+  --chart-2: oklch(0.72 0.10 75);
+  --chart-3: oklch(0.58 0.12 55);
+  --chart-4: oklch(0.96 0.02 95);
+  --chart-5: oklch(0.25 0.04 130);
+  --sidebar: oklch(0.96 0.015 95);
+  --sidebar-foreground: oklch(0.25 0.04 130);
+  --sidebar-primary: oklch(0.52 0.09 130);
+  --sidebar-primary-foreground: oklch(0.98 0.01 95);
+  --sidebar-accent: oklch(0.93 0.02 95);
+  --sidebar-accent-foreground: oklch(0.25 0.04 130);
+  --sidebar-border: oklch(0.88 0.03 95);
+  --sidebar-ring: oklch(0.52 0.09 130);
+}
+[data-palette="olive-garden"].dark {
+  --background: oklch(0.18 0.03 130);
+  --foreground: oklch(0.96 0.02 95);
+  --card: oklch(0.22 0.03 130);
+  --card-foreground: oklch(0.96 0.02 95);
+  --popover: oklch(0.22 0.03 130);
+  --popover-foreground: oklch(0.96 0.02 95);
+  --primary: oklch(0.62 0.10 130);
+  --primary-foreground: oklch(0.18 0.03 130);
+  --secondary: oklch(0.28 0.03 130);
+  --secondary-foreground: oklch(0.93 0.02 95);
+  --muted: oklch(0.28 0.025 130);
+  --muted-foreground: oklch(0.72 0.10 75);
+  --accent: oklch(0.28 0.03 130);
+  --accent-foreground: oklch(0.96 0.02 95);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.35 0.03 130);
+  --input: oklch(0.32 0.03 130);
+  --ring: oklch(0.62 0.10 130);
+  --sidebar: oklch(0.20 0.03 130);
+  --sidebar-foreground: oklch(0.96 0.02 95);
+  --sidebar-primary: oklch(0.62 0.10 130);
+  --sidebar-primary-foreground: oklch(0.98 0.01 95);
+  --sidebar-accent: oklch(0.28 0.03 130);
+  --sidebar-accent-foreground: oklch(0.96 0.02 95);
+  --sidebar-border: oklch(0.35 0.03 130);
+  --sidebar-ring: oklch(0.62 0.10 130);
+}
+
+/* =============================================================
+   THEME: Fiery Ocean
+   #780000 Molten Lava | #C1121F Flag Red | #FDF0D5 Papaya Whip
+   #003049 Deep Space Blue | #669BBC Steel Blue
+   ============================================================= */
+
+[data-palette="fiery-ocean"] {
+  --background: oklch(0.98 0.005 60);
+  --foreground: oklch(0.22 0.05 245);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.05 245);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.05 245);
+  --primary: oklch(0.45 0.18 25);
+  --primary-foreground: oklch(0.98 0.005 60);
+  --secondary: oklch(0.95 0.01 60);
+  --secondary-foreground: oklch(0.22 0.05 245);
+  --muted: oklch(0.96 0.008 60);
+  --muted-foreground: oklch(0.50 0.06 245);
+  --accent: oklch(0.95 0.01 60);
+  --accent-foreground: oklch(0.22 0.05 245);
+  --destructive: oklch(0.50 0.22 25);
+  --border: oklch(0.88 0.015 60);
+  --input: oklch(0.88 0.015 60);
+  --ring: oklch(0.45 0.18 25);
+  --chart-1: oklch(0.45 0.18 25);
+  --chart-2: oklch(0.65 0.08 240);
+  --chart-3: oklch(0.22 0.05 245);
+  --chart-4: oklch(0.96 0.02 85);
+  --chart-5: oklch(0.35 0.15 25);
+  --sidebar: oklch(0.22 0.05 245);
+  --sidebar-foreground: oklch(0.96 0.008 60);
+  --sidebar-primary: oklch(0.50 0.18 25);
+  --sidebar-primary-foreground: oklch(0.98 0.005 60);
+  --sidebar-accent: oklch(0.28 0.05 245);
+  --sidebar-accent-foreground: oklch(0.96 0.008 60);
+  --sidebar-border: oklch(0.32 0.05 245);
+  --sidebar-ring: oklch(0.50 0.18 25);
+}
+[data-palette="fiery-ocean"].dark {
+  --background: oklch(0.16 0.03 245);
+  --foreground: oklch(0.96 0.008 60);
+  --card: oklch(0.20 0.04 245);
+  --card-foreground: oklch(0.96 0.008 60);
+  --popover: oklch(0.20 0.04 245);
+  --popover-foreground: oklch(0.96 0.008 60);
+  --primary: oklch(0.55 0.18 25);
+  --primary-foreground: oklch(0.16 0.03 245);
+  --secondary: oklch(0.26 0.04 245);
+  --secondary-foreground: oklch(0.93 0.01 60);
+  --muted: oklch(0.26 0.035 245);
+  --muted-foreground: oklch(0.65 0.08 240);
+  --accent: oklch(0.26 0.04 245);
+  --accent-foreground: oklch(0.96 0.008 60);
+  --destructive: oklch(0.60 0.20 25);
+  --border: oklch(0.33 0.04 245);
+  --input: oklch(0.30 0.04 245);
+  --ring: oklch(0.55 0.18 25);
+  --sidebar: oklch(0.18 0.04 245);
+  --sidebar-foreground: oklch(0.96 0.008 60);
+  --sidebar-primary: oklch(0.55 0.18 25);
+  --sidebar-primary-foreground: oklch(0.98 0.005 60);
+  --sidebar-accent: oklch(0.26 0.04 245);
+  --sidebar-accent-foreground: oklch(0.96 0.008 60);
+  --sidebar-border: oklch(0.33 0.04 245);
+  --sidebar-ring: oklch(0.55 0.18 25);
+}
+
+/* =============================================================
+   THEME: Summer Breeze
+   #E63946 Strawberry Red | #F1FAEE Honeydew | #A8DADC Frosted Blue
+   #457B9D Steel Blue | #1D3557 Deep Space Blue
+   ============================================================= */
+
+[data-palette="summer-breeze"] {
+  --background: oklch(0.98 0.005 155);
+  --foreground: oklch(0.28 0.05 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.28 0.05 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.28 0.05 255);
+  --primary: oklch(0.55 0.07 240);
+  --primary-foreground: oklch(0.98 0.005 155);
+  --secondary: oklch(0.93 0.02 195);
+  --secondary-foreground: oklch(0.28 0.05 255);
+  --muted: oklch(0.95 0.01 195);
+  --muted-foreground: oklch(0.50 0.05 240);
+  --accent: oklch(0.93 0.02 195);
+  --accent-foreground: oklch(0.28 0.05 255);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.88 0.025 195);
+  --input: oklch(0.88 0.025 195);
+  --ring: oklch(0.55 0.07 240);
+  --chart-1: oklch(0.55 0.22 25);
+  --chart-2: oklch(0.82 0.04 195);
+  --chart-3: oklch(0.55 0.07 240);
+  --chart-4: oklch(0.28 0.05 255);
+  --chart-5: oklch(0.96 0.01 155);
+  --sidebar: oklch(0.97 0.01 195);
+  --sidebar-foreground: oklch(0.28 0.05 255);
+  --sidebar-primary: oklch(0.55 0.07 240);
+  --sidebar-primary-foreground: oklch(0.98 0.005 155);
+  --sidebar-accent: oklch(0.93 0.02 195);
+  --sidebar-accent-foreground: oklch(0.28 0.05 255);
+  --sidebar-border: oklch(0.88 0.025 195);
+  --sidebar-ring: oklch(0.55 0.07 240);
+}
+[data-palette="summer-breeze"].dark {
+  --background: oklch(0.17 0.04 255);
+  --foreground: oklch(0.96 0.01 155);
+  --card: oklch(0.21 0.04 255);
+  --card-foreground: oklch(0.96 0.01 155);
+  --popover: oklch(0.21 0.04 255);
+  --popover-foreground: oklch(0.96 0.01 155);
+  --primary: oklch(0.62 0.08 240);
+  --primary-foreground: oklch(0.17 0.04 255);
+  --secondary: oklch(0.27 0.04 255);
+  --secondary-foreground: oklch(0.93 0.01 155);
+  --muted: oklch(0.27 0.035 255);
+  --muted-foreground: oklch(0.72 0.04 195);
+  --accent: oklch(0.27 0.04 255);
+  --accent-foreground: oklch(0.96 0.01 155);
+  --destructive: oklch(0.60 0.22 25);
+  --border: oklch(0.34 0.04 255);
+  --input: oklch(0.31 0.04 255);
+  --ring: oklch(0.62 0.08 240);
+  --sidebar: oklch(0.19 0.04 255);
+  --sidebar-foreground: oklch(0.96 0.01 155);
+  --sidebar-primary: oklch(0.62 0.08 240);
+  --sidebar-primary-foreground: oklch(0.98 0.005 155);
+  --sidebar-accent: oklch(0.27 0.04 255);
+  --sidebar-accent-foreground: oklch(0.96 0.01 155);
+  --sidebar-border: oklch(0.34 0.04 255);
+  --sidebar-ring: oklch(0.62 0.08 240);
+}
+
+/* =============================================================
+   THEME: Summer Fun
+   #8ECAE6 Sky Blue | #219EBC Blue Green | #023047 Deep Space Blue
+   #FFB703 Amber Flame | #FB8500 Tiger Orange
+   ============================================================= */
+
+[data-palette="summer-fun"] {
+  --background: oklch(0.98 0.005 220);
+  --foreground: oklch(0.22 0.05 230);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.05 230);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.05 230);
+  --primary: oklch(0.65 0.12 210);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.93 0.02 220);
+  --secondary-foreground: oklch(0.22 0.05 230);
+  --muted: oklch(0.95 0.015 220);
+  --muted-foreground: oklch(0.50 0.06 230);
+  --accent: oklch(0.80 0.15 80);
+  --accent-foreground: oklch(0.22 0.05 230);
+  --destructive: oklch(0.65 0.18 50);
+  --border: oklch(0.88 0.02 220);
+  --input: oklch(0.88 0.02 220);
+  --ring: oklch(0.65 0.12 210);
+  --chart-1: oklch(0.65 0.12 210);
+  --chart-2: oklch(0.80 0.15 80);
+  --chart-3: oklch(0.70 0.17 55);
+  --chart-4: oklch(0.83 0.05 220);
+  --chart-5: oklch(0.22 0.05 230);
+  --sidebar: oklch(0.22 0.05 230);
+  --sidebar-foreground: oklch(0.93 0.02 220);
+  --sidebar-primary: oklch(0.80 0.15 80);
+  --sidebar-primary-foreground: oklch(0.22 0.05 230);
+  --sidebar-accent: oklch(0.28 0.05 230);
+  --sidebar-accent-foreground: oklch(0.93 0.02 220);
+  --sidebar-border: oklch(0.32 0.05 230);
+  --sidebar-ring: oklch(0.65 0.12 210);
+}
+[data-palette="summer-fun"].dark {
+  --background: oklch(0.15 0.04 230);
+  --foreground: oklch(0.93 0.02 220);
+  --card: oklch(0.19 0.04 230);
+  --card-foreground: oklch(0.93 0.02 220);
+  --popover: oklch(0.19 0.04 230);
+  --popover-foreground: oklch(0.93 0.02 220);
+  --primary: oklch(0.70 0.12 210);
+  --primary-foreground: oklch(0.15 0.04 230);
+  --secondary: oklch(0.25 0.04 230);
+  --secondary-foreground: oklch(0.90 0.02 220);
+  --muted: oklch(0.25 0.035 230);
+  --muted-foreground: oklch(0.75 0.06 210);
+  --accent: oklch(0.80 0.15 80);
+  --accent-foreground: oklch(0.15 0.04 230);
+  --destructive: oklch(0.70 0.18 50);
+  --border: oklch(0.32 0.04 230);
+  --input: oklch(0.29 0.04 230);
+  --ring: oklch(0.70 0.12 210);
+  --sidebar: oklch(0.17 0.04 230);
+  --sidebar-foreground: oklch(0.93 0.02 220);
+  --sidebar-primary: oklch(0.80 0.15 80);
+  --sidebar-primary-foreground: oklch(0.15 0.04 230);
+  --sidebar-accent: oklch(0.25 0.04 230);
+  --sidebar-accent-foreground: oklch(0.93 0.02 220);
+  --sidebar-border: oklch(0.32 0.04 230);
+  --sidebar-ring: oklch(0.70 0.12 210);
+}
+
+/* =============================================================
+   THEME: Cool Waters
+   #22577A Baltic Blue | #38A3A5 Tropical Teal | #57CC99 Mint Leaf
+   #80ED99 Light Green | #C7F9CC Tea Green
+   ============================================================= */
+
+[data-palette="cool-waters"] {
+  --background: oklch(0.98 0.008 160);
+  --foreground: oklch(0.30 0.05 220);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.30 0.05 220);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.30 0.05 220);
+  --primary: oklch(0.62 0.10 175);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.93 0.025 160);
+  --secondary-foreground: oklch(0.30 0.05 220);
+  --muted: oklch(0.95 0.015 160);
+  --muted-foreground: oklch(0.48 0.05 180);
+  --accent: oklch(0.93 0.025 160);
+  --accent-foreground: oklch(0.30 0.05 220);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.88 0.025 160);
+  --input: oklch(0.88 0.025 160);
+  --ring: oklch(0.62 0.10 175);
+  --chart-1: oklch(0.62 0.10 175);
+  --chart-2: oklch(0.72 0.12 160);
+  --chart-3: oklch(0.82 0.14 150);
+  --chart-4: oklch(0.30 0.05 220);
+  --chart-5: oklch(0.95 0.03 150);
+  --sidebar: oklch(0.97 0.01 160);
+  --sidebar-foreground: oklch(0.30 0.05 220);
+  --sidebar-primary: oklch(0.62 0.10 175);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.93 0.025 160);
+  --sidebar-accent-foreground: oklch(0.30 0.05 220);
+  --sidebar-border: oklch(0.88 0.025 160);
+  --sidebar-ring: oklch(0.62 0.10 175);
+}
+[data-palette="cool-waters"].dark {
+  --background: oklch(0.17 0.03 220);
+  --foreground: oklch(0.95 0.015 160);
+  --card: oklch(0.21 0.035 220);
+  --card-foreground: oklch(0.95 0.015 160);
+  --popover: oklch(0.21 0.035 220);
+  --popover-foreground: oklch(0.95 0.015 160);
+  --primary: oklch(0.68 0.12 175);
+  --primary-foreground: oklch(0.17 0.03 220);
+  --secondary: oklch(0.27 0.03 220);
+  --secondary-foreground: oklch(0.92 0.015 160);
+  --muted: oklch(0.27 0.025 220);
+  --muted-foreground: oklch(0.68 0.06 175);
+  --accent: oklch(0.27 0.03 220);
+  --accent-foreground: oklch(0.95 0.015 160);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.34 0.03 220);
+  --input: oklch(0.31 0.03 220);
+  --ring: oklch(0.68 0.12 175);
+  --sidebar: oklch(0.19 0.035 220);
+  --sidebar-foreground: oklch(0.95 0.015 160);
+  --sidebar-primary: oklch(0.68 0.12 175);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.27 0.03 220);
+  --sidebar-accent-foreground: oklch(0.95 0.015 160);
+  --sidebar-border: oklch(0.34 0.03 220);
+  --sidebar-ring: oklch(0.68 0.12 175);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
