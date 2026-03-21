@@ -53,6 +53,7 @@ export interface Profile {
   default_vat_percent: number | null
   default_irpf_percent: number | null
   is_admin: boolean
+  onboarding_completed: boolean
   created_at: string
   updated_at: string
 }
