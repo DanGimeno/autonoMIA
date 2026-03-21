@@ -132,7 +132,7 @@ export function OnboardingWizard({ userEmail }: OnboardingWizardProps) {
   const stepLabels = ['Datos personales', 'Dirección y fiscalidad', 'Tu primer cliente']
 
   return (
-    <Card className="w-full max-w-lg">
+    <Card className="w-full max-w-lg max-h-[90vh] overflow-y-auto">
       <CardHeader className="text-center pb-2">
         <div className="mx-auto mb-4">
           <h1 className="text-2xl font-bold">autonoMIA</h1>
@@ -397,9 +397,9 @@ export function OnboardingWizard({ userEmail }: OnboardingWizardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between sticky bottom-0 bg-card border-t pt-4">
         {step > 1 ? (
-          <Button variant="outline" onClick={prevStep} disabled={loading}>
+          <Button type="button" variant="outline" onClick={prevStep} disabled={loading}>
             <ArrowLeft className="size-4" />
             Anterior
           </Button>
@@ -408,12 +408,12 @@ export function OnboardingWizard({ userEmail }: OnboardingWizardProps) {
         )}
 
         {step < TOTAL_STEPS ? (
-          <Button onClick={nextStep}>
+          <Button type="button" onClick={nextStep}>
             Siguiente
             <ArrowRight className="size-4" />
           </Button>
         ) : (
-          <Button onClick={handleComplete} disabled={loading}>
+          <Button type="button" onClick={handleComplete} disabled={loading}>
             {loading ? 'Guardando...' : (
               <>
                 Completar

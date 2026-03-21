@@ -45,8 +45,8 @@ export default async function AppLayout({
         Saltar al contenido principal
       </a>
       {!isOnboardingPage && <Sidebar />}
-      <main id="main-content" className="flex-1 overflow-auto" tabIndex={-1}>
-        <div className={isOnboardingPage ? '' : 'p-6'}>
+      <main id="main-content" className="flex-1 overflow-auto flex flex-col" tabIndex={-1}>
+        <div className={`flex-1 ${isOnboardingPage ? '' : 'p-6'}`}>
           {children}
         </div>
         {!isOnboardingPage && <AppFooter />}
