@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { WorkLogWithProject } from '@/types'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -15,7 +16,7 @@ export default async function DashboardPage() {
   const projects = projectsRes.data || []
   const invoices = invoicesRes.data || []
   const taxTasks = taxTasksRes.data || []
-  const recentLogs = recentLogsRes.data || []
+  const recentLogs = (recentLogsRes.data || []) as unknown as WorkLogWithProject[]
 
   const activeProjects = projects.filter(p => p.status === 'active').length
   const pendingInvoices = invoices.filter(i => i.status === 'issued' || i.status === 'draft')
@@ -104,7 +105,7 @@ export default async function DashboardPage() {
                 <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
                     <div className="text-sm font-medium text-gray-900">
-                      {(log.projects as unknown as { name: string } | null)?.name || 'Sin proyecto'}
+                      {log.projects?.name || 'Sin proyecto'}
                     </div>
                     <div className="text-xs text-gray-500">{log.work_date}</div>
                   </div>

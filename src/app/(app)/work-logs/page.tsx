@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { WorkLog, Project } from '@/types'
+import { WorkLog, WorkLogWithProject, Project } from '@/types'
 import WorkLogModal from '@/components/WorkLogModal'
 
 function getDaysInMonth(year: number, month: number) {
@@ -18,7 +18,7 @@ export default function WorkLogsPage() {
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
-  const [logs, setLogs] = useState<WorkLog[]>([])
+  const [logs, setLogs] = useState<WorkLogWithProject[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
@@ -36,7 +36,7 @@ export default function WorkLogsPage() {
       .gte('work_date', startDate)
       .lte('work_date', endDate)
       .order('work_date')
-    setLogs((data as WorkLog[]) || [])
+    setLogs((data as WorkLogWithProject[]) || [])
   }, [currentYear, currentMonth, supabase])
 
   useEffect(() => {
@@ -90,12 +90,12 @@ export default function WorkLogsPage() {
   const hoursPerProject: Record<string, { name: string; hours: number }> = {}
   logs.forEach(log => {
     const key = log.project_id || 'none'
-    const name = (log as WorkLog & { projects?: { name: string } }).projects?.name || 'Sin proyecto'
+    const name = log.projects?.name || 'Sin proyecto'
     if (!hoursPerProject[key]) hoursPerProject[key] = { name, hours: 0 }
     hoursPerProject[key].hours += log.hours
   })
 
-  const logsByDate: Record<string, WorkLog[]> = {}
+  const logsByDate: Record<string, WorkLogWithProject[]> = {}
   logs.forEach(log => {
     if (!logsByDate[log.work_date]) logsByDate[log.work_date] = []
     logsByDate[log.work_date].push(log)
@@ -161,7 +161,7 @@ export default function WorkLogsPage() {
                     onClick={(e) => handleLogClick(log, e)}
                     className="text-xs bg-blue-100 text-blue-700 rounded px-1 py-0.5 mb-0.5 truncate hover:bg-blue-200"
                   >
-                    {log.hours}h {(log as WorkLog & { projects?: { name: string } }).projects?.name || ''}
+                    {log.hours}h {log.projects?.name || ''}
                   </div>
                 ))}
                 {dayHours > 0 && dayLogs.length > 1 && (

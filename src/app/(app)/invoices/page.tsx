@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
-import { InvoiceStatus } from '@/types'
+import { InvoiceStatus, InvoiceWithProject } from '@/types'
 
 async function markCollected(formData: FormData) {
   'use server'
@@ -52,9 +52,10 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Pro
     query = query.eq('status', params.status)
   }
 
-  const { data: invoices } = await query
+  const { data: invoicesData } = await query
+  const invoices = (invoicesData || []) as InvoiceWithProject[]
 
-  const totalPending = (invoices || [])
+  const totalPending = invoices
     .filter(i => i.status === 'issued')
     .reduce((sum, i) => sum + i.amount, 0)
 
@@ -126,7 +127,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Pro
                   <tr key={invoice.id} className={`hover:bg-gray-50/50 ${isOverdue ? 'bg-red-50/30' : ''}`}>
                     <td className="py-3 px-4 text-sm font-medium text-gray-900">{invoice.invoice_number}</td>
                     <td className="py-3 px-4 text-sm text-gray-700 max-w-40 truncate">{invoice.concept}</td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{(invoice as { projects?: { name: string } } & typeof invoice).projects?.name || '—'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-500">{invoice.projects?.name || '—'}</td>
                     <td className="py-3 px-4 text-sm text-gray-500">{invoice.issue_date}</td>
                     <td className="py-3 px-4 text-sm font-medium text-gray-900">€{invoice.amount.toFixed(2)}</td>
                     <td className="py-3 px-4">

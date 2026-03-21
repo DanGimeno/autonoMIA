@@ -35,6 +35,10 @@ export interface WorkLog {
   project?: Project
 }
 
+export interface WorkLogWithProject extends WorkLog {
+  projects: { name: string } | null
+}
+
 export interface Invoice {
   id: string
   user_id: string
@@ -52,6 +56,10 @@ export interface Invoice {
   notes: string | null
   created_at: string
   project?: Project
+}
+
+export interface InvoiceWithProject extends Invoice {
+  projects: { name: string } | null
 }
 
 export interface TaxTask {
