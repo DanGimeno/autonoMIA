@@ -6,6 +6,8 @@ import { FolderKanban, FileText, CircleCheck, ClipboardList } from 'lucide-react
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { WorkLogWithProject } from '@/types'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = { title: 'Dashboard | autonoMIA' }
 
@@ -45,7 +47,10 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <HelpDialog content={helpContent.dashboard} title="Ayuda — Dashboard" />
+        </div>
         <p className="text-muted-foreground mt-1">Resumen de tu actividad como autónomo</p>
       </div>
 

@@ -11,6 +11,8 @@ import { Plus, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import { TaxTaskActions } from '@/components/TaxTaskActions'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = {
   title: 'Tareas fiscales | autonoMIA',
@@ -78,7 +80,10 @@ export default async function TaxTasksPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Tareas fiscales</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Tareas fiscales</h1>
+            <HelpDialog content={helpContent.taxTasks} title="Ayuda — Tareas fiscales" />
+          </div>
           <p className="text-muted-foreground mt-1">Gestiona tus obligaciones fiscales</p>
         </div>
         <Button asChild>

@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/table'
 import { Shield, CheckCircle2, XCircle, Play } from 'lucide-react'
 import { AdminTaskActions } from '@/components/AdminTaskActions'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = {
   title: 'Administración | autonoMIA',
@@ -60,7 +62,10 @@ export default async function AdminPage() {
       <div className="flex items-center gap-3 mb-6">
         <Shield className="h-6 w-6 text-primary" aria-hidden="true" />
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Panel de administración</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Panel de administración</h1>
+            <HelpDialog content={helpContent.admin} title="Ayuda — Administración" />
+          </div>
           <p className="text-muted-foreground mt-1">Gestión de tareas programadas</p>
         </div>
       </div>

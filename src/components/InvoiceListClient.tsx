@@ -15,6 +15,8 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus, Pencil, Trash2, CircleCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 interface InvoiceListClientProps {
   invoices: InvoiceWithProject[]
@@ -98,7 +100,10 @@ export default function InvoiceListClient({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Facturas</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold">Facturas</h1>
+            <HelpDialog content={helpContent.invoices} title="Ayuda — Facturas" />
+          </div>
           <p className="text-muted-foreground mt-1">Gestiona tus facturas</p>
         </div>
         <Link href="/invoices/new">

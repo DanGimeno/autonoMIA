@@ -7,6 +7,8 @@ import WorkLogModal from '@/components/WorkLogModal'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, Clock, Plus } from 'lucide-react'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate()
@@ -116,7 +118,10 @@ export default function WorkLogsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Registro de horas</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Registro de horas</h1>
+            <HelpDialog content={helpContent.workLogs} title="Ayuda — Registro de horas" />
+          </div>
           <p className="text-muted-foreground mt-1">Registra tu trabajo diario</p>
         </div>
         <nav aria-label="Navegación de meses" className="flex items-center gap-1">

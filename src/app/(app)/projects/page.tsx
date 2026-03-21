@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, FolderOpen } from 'lucide-react'
 import DeleteProjectButton from '@/components/DeleteProjectButton'
 import type { Metadata } from 'next'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = {
   title: 'Proyectos | autonoMIA',
@@ -58,9 +60,12 @@ export default async function ProjectsPage() {
     <section aria-labelledby="projects-heading">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 id="projects-heading" className="text-2xl font-bold tracking-tight">
-            Proyectos
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 id="projects-heading" className="text-2xl font-bold tracking-tight">
+              Proyectos
+            </h1>
+            <HelpDialog content={helpContent.projects} title="Ayuda — Proyectos" />
+          </div>
           <p className="text-muted-foreground mt-1">
             Gestiona tus proyectos de cliente
           </p>

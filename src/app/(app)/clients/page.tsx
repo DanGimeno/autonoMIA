@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, Users, Building2 } from 'lucide-react'
 import DeleteClientButton from '@/components/DeleteClientButton'
 import type { Metadata } from 'next'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = {
   title: 'Clientes | autonoMIA',
@@ -50,9 +52,12 @@ export default async function ClientsPage() {
     <section aria-labelledby="clients-heading">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 id="clients-heading" className="text-2xl font-bold tracking-tight">
-            Clientes
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 id="clients-heading" className="text-2xl font-bold tracking-tight">
+              Clientes
+            </h1>
+            <HelpDialog content={helpContent.clients} title="Ayuda — Clientes" />
+          </div>
           <p className="text-muted-foreground mt-1">
             Gestiona tus clientes y sus datos fiscales
           </p>

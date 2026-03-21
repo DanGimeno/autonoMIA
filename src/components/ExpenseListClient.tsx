@@ -10,6 +10,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Plus, Pencil } from 'lucide-react'
 import DeleteExpenseButton from '@/components/DeleteExpenseButton'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 interface ExpenseListClientProps {
   expenses: ExpenseWithRelations[]
@@ -135,7 +137,10 @@ export default function ExpenseListClient({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Gastos</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold">Gastos</h1>
+            <HelpDialog content={helpContent.expenses} title="Ayuda — Gastos" />
+          </div>
           <p className="text-muted-foreground mt-1">Gestiona tus gastos</p>
         </div>
         <Link href="/expenses/new">

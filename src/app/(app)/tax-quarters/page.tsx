@@ -9,6 +9,8 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { HelpDialog } from '@/components/HelpDialog'
+import { helpContent } from '@/lib/help/content'
 
 export const metadata: Metadata = {
   title: 'Trimestres fiscales | autonoMIA',
@@ -135,7 +137,10 @@ export default async function TaxQuartersPage({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Trimestres fiscales</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight">Trimestres fiscales</h1>
+            <HelpDialog content={helpContent.taxQuarters} title="Ayuda — Trimestres fiscales" />
+          </div>
           <p className="text-muted-foreground mt-1">Resumen trimestral de IVA, IRPF y cuota de autonomo</p>
         </div>
       </div>
