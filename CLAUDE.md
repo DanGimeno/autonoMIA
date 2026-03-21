@@ -1,8 +1,8 @@
-# autonomIA — Directivas del Proyecto
+# autonoMIA — Directivas del Proyecto
 
 ## Descripción
 
-autonomIA es una aplicación web para autónomos españoles. Gestiona proyectos, registro de horas, facturación (con IVA/IRPF) y tareas fiscales. Toda la UI está en español.
+autonoMIA es una aplicación web para autónomos españoles. Gestiona proyectos, registro de horas, facturación (con IVA/IRPF) y tareas fiscales. Toda la UI está en español.
 
 ## Stack
 
@@ -89,7 +89,7 @@ Toda feature, componente y página debe cumplir WCAG 2.2 nivel AA como mínimo. 
 - **Sin trampas de teclado**: Los modales/diálogos deben permitir cerrar con Escape y devolver el foco al elemento que los abrió
 - **Skip links**: Incluir enlace "Saltar al contenido principal" como primer elemento focusable
 - **Tiempo suficiente**: No usar timeouts para acciones críticas sin opción de extender. Los toasts informativos deben durar mínimo 5 segundos
-- **Títulos de página descriptivos**: Cada ruta debe tener un `<title>` que describa la página (ej: "Facturas | autonomIA")
+- **Títulos de página descriptivos**: Cada ruta debe tener un `<title>` que describa la página (ej: "Facturas | autonoMIA")
 
 ### Comprensible (WCAG 3.x)
 

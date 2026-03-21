@@ -4,6 +4,19 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { TaxTask } from '@/types'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 interface TaxTaskFormProps {
   task?: TaxTask
@@ -57,58 +70,102 @@ export default function TaxTaskForm({ task }: TaxTaskFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>
-      )}
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-          <input type="text" required value={form.title} onChange={e => update('title', e.target.value)}
-            placeholder="Ej: Declaración IVA 1T 2025"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fecha límite *</label>
-            <input type="date" required value={form.due_date} onChange={e => update('due_date', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <Card className="max-w-2xl">
+      <form onSubmit={handleSubmit}>
+        <CardHeader>
+          <CardTitle>{task ? 'Editar tarea fiscal' : 'Nueva tarea fiscal'}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && (
+            <Alert variant="destructive" aria-live="polite">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="title">Titulo *</Label>
+            <Input
+              id="title"
+              type="text"
+              required
+              value={form.title}
+              onChange={e => update('title', e.target.value)}
+              placeholder="Ej: Declaracion IVA 1T 2025"
+              aria-required="true"
+            />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-            <select value={form.category} onChange={e => update('category', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="IVA">IVA</option>
-              <option value="IRPF">IRPF</option>
-              <option value="cuota autónomo">Cuota autónomo</option>
-              <option value="other">Otro</option>
-            </select>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="due_date">Fecha limite *</Label>
+              <Input
+                id="due_date"
+                type="date"
+                required
+                value={form.due_date}
+                onChange={e => update('due_date', e.target.value)}
+                aria-required="true"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Categoria</Label>
+              <Select
+                value={form.category}
+                onValueChange={(value) => {
+                  if (value) update('category', value as string)
+                }}
+              >
+                <SelectTrigger id="category" className="w-full" aria-label="Categoria de la tarea">
+                  <SelectValue placeholder="Selecciona categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="IVA">IVA</SelectItem>
+                  <SelectItem value="IRPF">IRPF</SelectItem>
+                  <SelectItem value="cuota autónomo">Cuota autonomo</SelectItem>
+                  <SelectItem value="other">Otro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <select value={form.status} onChange={e => update('status', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="pending">Pendiente</option>
-            <option value="done">Completada</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
-          <textarea value={form.notes} onChange={e => update('notes', e.target.value)} rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-      </div>
-      <div className="flex gap-3 mt-6">
-        <button type="submit" disabled={loading}
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors">
-          {loading ? 'Guardando...' : task ? 'Actualizar' : 'Crear tarea'}
-        </button>
-        <button type="button" onClick={() => router.back()}
-          className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-          Cancelar
-        </button>
-      </div>
-    </form>
+
+          <div className="space-y-2">
+            <Label htmlFor="status">Estado</Label>
+            <Select
+              value={form.status}
+              onValueChange={(value) => {
+                if (value) update('status', value as string)
+              }}
+            >
+              <SelectTrigger id="status" className="w-full" aria-label="Estado de la tarea">
+                <SelectValue placeholder="Selecciona estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pendiente</SelectItem>
+                <SelectItem value="done">Completada</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notas</Label>
+            <Textarea
+              id="notes"
+              value={form.notes}
+              onChange={e => update('notes', e.target.value)}
+              rows={3}
+              placeholder="Notas adicionales..."
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex gap-3">
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Guardando...' : task ? 'Actualizar' : 'Crear tarea'}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            Cancelar
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   )
 }

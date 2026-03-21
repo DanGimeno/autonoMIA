@@ -1,26 +1,69 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { WorkLog, Project } from '@/types'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertTriangle, Trash2 } from 'lucide-react'
 
 interface WorkLogModalProps {
   date: string
   log: WorkLog | null
   projects: Project[]
-  onClose: () => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSave: () => void
 }
 
-export default function WorkLogModal({ date, log, projects, onClose, onSave }: WorkLogModalProps) {
-  const supabase = createClient()
+function formatDateSpanish(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00')
+  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+const supabase = createClient()
+
+export default function WorkLogModal({ date, log, projects, open, onOpenChange, onSave }: WorkLogModalProps) {
   const [form, setForm] = useState({
-    project_id: log?.project_id || '',
-    hours: log?.hours?.toString() || '',
-    notes: log?.notes || '',
+    project_id: '',
+    hours: '',
+    notes: '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const firstInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (open) {
+      setForm({
+        project_id: log?.project_id || '',
+        hours: log?.hours?.toString() || '',
+        notes: log?.notes || '',
+      })
+      setError(null)
+      setLoading(false)
+      setShowDeleteConfirm(false)
+    }
+  }, [open, log])
 
   function update(field: string, value: string) {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -55,93 +98,141 @@ export default function WorkLogModal({ date, log, projects, onClose, onSave }: W
       setError(result.error.message)
       setLoading(false)
     } else {
+      setLoading(false)
       onSave()
-      onClose()
+      onOpenChange(false)
     }
   }
 
   async function handleDelete() {
-    if (!log || !confirm('¿Eliminar este registro?')) return
+    if (!log) return
+    setLoading(true)
     await supabase.from('work_logs').delete().eq('id', log.id)
+    setLoading(false)
     onSave()
-    onClose()
+    onOpenChange(false)
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {log ? 'Editar registro' : 'Añadir horas'} — {date}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm">{error}</div>
-          )}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Proyecto</label>
-            <select
-              value={form.project_id}
-              onChange={(e) => update('project_id', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Sin proyecto</option>
-              {projects.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Horas *</label>
-            <input
-              type="number"
-              required
-              min="0.5"
-              max="24"
-              step="0.5"
-              value={form.hours}
-              onChange={(e) => update('hours', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
-            <textarea
-              value={form.notes}
-              onChange={(e) => update('notes', e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors"
-            >
-              {loading ? 'Guardando...' : 'Guardar'}
-            </button>
-            {log && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md" aria-describedby="worklog-dialog-desc">
+        <DialogHeader>
+          <DialogTitle>
+            {log ? 'Editar registro' : 'Añadir horas'}
+          </DialogTitle>
+          <DialogDescription id="worklog-dialog-desc">
+            {formatDateSpanish(date)}
+          </DialogDescription>
+        </DialogHeader>
+
+        {showDeleteConfirm ? (
+          <div className="space-y-4">
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+              <AlertDescription>
+                ¿Seguro que quieres eliminar este registro de {log?.hours}h?
+              </AlertDescription>
+            </Alert>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={loading}
               >
-                Eliminar
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={loading}
+              >
+                {loading ? 'Eliminando...' : 'Eliminar'}
+              </Button>
+            </DialogFooter>
           </div>
-        </form>
-      </div>
-    </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div role="status" aria-live="polite">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="wl-project">Proyecto</Label>
+              <Select
+                value={form.project_id}
+                onValueChange={(value) => update('project_id', value === '_none' || value === null ? '' : value)}
+              >
+                <SelectTrigger id="wl-project">
+                  <SelectValue placeholder="Sin proyecto" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">Sin proyecto</SelectItem>
+                  {projects.map(p => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="wl-hours">Horas *</Label>
+              <Input
+                ref={firstInputRef}
+                id="wl-hours"
+                type="number"
+                required
+                min="0.5"
+                max="24"
+                step="0.5"
+                value={form.hours}
+                onChange={(e) => update('hours', e.target.value)}
+                aria-describedby={error ? 'wl-error' : undefined}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="wl-notes">Notas</Label>
+              <Textarea
+                id="wl-notes"
+                value={form.notes}
+                onChange={(e) => update('notes', e.target.value)}
+                rows={3}
+              />
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              {log && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="text-destructive hover:text-destructive"
+                  aria-label="Eliminar registro"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+              <div className="flex-1" />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Guardando...' : 'Guardar'}
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }

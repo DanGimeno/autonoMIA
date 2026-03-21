@@ -4,6 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function SignupForm() {
   const [email, setEmail] = useState('')
@@ -39,88 +44,108 @@ export default function SignupForm() {
       setLoading(false)
     } else {
       setSuccess(true)
-      setTimeout(() => router.push('/dashboard'), 2000)
     }
   }
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-sm text-center">
-          <div className="text-green-500 text-5xl mb-4">✓</div>
-          <h2 className="text-xl font-semibold text-gray-900">¡Cuenta creada!</h2>
-          <p className="mt-2 text-gray-600">Redirigiendo al dashboard...</p>
-        </div>
+      <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+        <Card className="w-full max-w-md text-center">
+          <CardHeader>
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" aria-hidden="true">
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <CardTitle className="text-xl">¡Cuenta creada!</CardTitle>
+            <CardDescription className="space-y-2">
+              <span className="block">Te hemos enviado un correo de confirmación a <strong>{email}</strong>.</span>
+              <span className="block">Revisa tu bandeja de entrada (y spam) y haz clic en el enlace para verificar tu cuenta.</span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full" onClick={() => router.push('/login')}>
+              Ir a iniciar sesión
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h1 className="text-center text-3xl font-bold text-gray-900">autonomIA</h1>
-          <h2 className="mt-2 text-center text-xl text-gray-600">Crea tu cuenta</h2>
-        </div>
-        <form className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-sm" onSubmit={handleSignup}>
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-              {error}
+    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4 py-12 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">autonoMIA</CardTitle>
+          <CardDescription>Crea tu cuenta</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form id="signup-form" className="space-y-4" onSubmit={handleSignup}>
+            <div aria-live="polite" aria-atomic="true">
+              {error && (
+                <Alert variant="destructive" id="signup-error">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
             </div>
-          )}
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico</Label>
+              <Input
                 id="email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="tu@email.com"
+                aria-describedby={error ? 'signup-error' : undefined}
               />
             </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-              <input
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Contraseña</Label>
+              <Input
                 id="password"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Mínimo 6 caracteres"
+                aria-describedby={error ? 'signup-error' : undefined}
               />
             </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
-              <input
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
+              <Input
                 id="confirmPassword"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Repite tu contraseña"
+                aria-describedby={error ? 'signup-error' : undefined}
               />
             </div>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors"
-          >
-            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
-          </button>
-          <p className="text-center text-sm text-gray-600">
+
+            <Button type="submit" disabled={loading} className="w-full" size="lg">
+              {loading ? 'Creando cuenta...' : 'Crear cuenta'}
+            </Button>
+          </form>
+        </CardContent>
+
+        <CardFooter className="justify-center">
+          <p className="text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
               Inicia sesión
             </Link>
           </p>
-        </form>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   )
 }

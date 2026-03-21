@@ -6,7 +6,7 @@ user_invocable: true
 
 # New Feature Scaffold
 
-Create a new CRUD feature for autonomIA following all project conventions.
+Create a new CRUD feature for autonoMIA following all project conventions.
 
 ## Arguments
 - Feature name (e.g., "expenses", "clients")

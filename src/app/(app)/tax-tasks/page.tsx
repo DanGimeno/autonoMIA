@@ -1,7 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
 import { TaxTaskStatus, TaxCategory } from '@/types'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Plus, AlertTriangle } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import type { Metadata } from 'next'
+import { TaxTaskActions } from '@/components/TaxTaskActions'
+
+export const metadata: Metadata = {
+  title: 'Tareas fiscales | autonoMIA',
+}
 
 async function toggleStatus(formData: FormData) {
   'use server'
@@ -22,22 +35,40 @@ async function deleteTask(formData: FormData) {
   revalidatePath('/tax-tasks')
 }
 
-const categoryColors: Record<TaxCategory, string> = {
-  IVA: 'bg-purple-100 text-purple-700',
-  IRPF: 'bg-orange-100 text-orange-700',
-  'cuota autónomo': 'bg-blue-100 text-blue-700',
-  other: 'bg-gray-100 text-gray-700',
+function categoryBadgeVariant(category: TaxCategory) {
+  switch (category) {
+    case 'IVA':
+      return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+    case 'IRPF':
+      return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
+    case 'cuota autónomo':
+      return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+    default:
+      return ''
+  }
+}
+
+function formatDateES(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00')
+  return date.toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 export default async function TaxTasksPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/login')
+
   const today = new Date().toISOString().split('T')[0]
 
   const { data: tasks } = await supabase
     .from('tax_tasks')
     .select('*')
-    .eq('user_id', user!.id)
+    .eq('user_id', user.id)
     .order('due_date', { ascending: true })
 
   const pending = (tasks || []).filter(t => t.status === 'pending')
@@ -47,111 +78,136 @@ export default async function TaxTasksPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tareas fiscales</h1>
-          <p className="text-gray-500 mt-1">Gestiona tus obligaciones fiscales</p>
+          <h1 className="text-2xl font-bold tracking-tight">Tareas fiscales</h1>
+          <p className="text-muted-foreground mt-1">Gestiona tus obligaciones fiscales</p>
         </div>
-        <Link
-          href="/tax-tasks/new"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-        >
-          + Nueva tarea
-        </Link>
+        <Button asChild>
+          <Link href="/tax-tasks/new">
+            <Plus className="mr-1 h-4 w-4" aria-hidden="true" />
+            Nueva tarea
+          </Link>
+        </Button>
       </div>
 
       {!tasks || tasks.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 shadow-sm border border-gray-100 text-center">
-          <div className="text-5xl mb-4">📋</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No hay tareas fiscales</h3>
-          <p className="text-gray-500 mb-4">Añade tus obligaciones fiscales periódicas</p>
-          <Link href="/tax-tasks/new" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-            Crear tarea
-          </Link>
-        </div>
+        <Card className="text-center">
+          <CardContent className="py-12">
+            <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" aria-hidden="true" />
+            <h3 className="text-lg font-medium mb-2">No hay tareas fiscales</h3>
+            <p className="text-muted-foreground mb-4">Añade tus obligaciones fiscales periódicas</p>
+            <Button asChild>
+              <Link href="/tax-tasks/new">Crear tarea</Link>
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-6">
           {pending.length > 0 && (
-            <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase mb-3">Pendientes ({pending.length})</h2>
+            <section aria-label="Tareas pendientes">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase mb-3">
+                Pendientes ({pending.length})
+              </h2>
               <div className="space-y-2">
                 {pending.map(task => {
                   const isOverdue = task.due_date < today
                   return (
-                    <div key={task.id} className={`bg-white rounded-xl p-4 shadow-sm border flex items-center gap-4 ${isOverdue ? 'border-red-200 bg-red-50/30' : 'border-gray-100'}`}>
-                      <form action={toggleStatus}>
-                        <input type="hidden" name="id" value={task.id} />
-                        <input type="hidden" name="status" value={task.status} />
-                        <button type="submit" className="w-5 h-5 rounded border-2 border-gray-300 hover:border-blue-500 transition-colors flex-shrink-0" />
-                      </form>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-gray-900">{task.title}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${categoryColors[task.category as TaxCategory]}`}>
-                            {task.category}
-                          </span>
-                          {isOverdue && <span className="text-xs text-red-600 font-medium">¡Vencida!</span>}
-                        </div>
-                        {task.notes && <p className="text-sm text-gray-500 mt-0.5">{task.notes}</p>}
-                      </div>
-                      <div className={`text-sm font-medium flex-shrink-0 ${isOverdue ? 'text-red-600' : 'text-gray-500'}`}>
-                        {task.due_date}
-                      </div>
-                      <div className="flex gap-2">
-                        <Link href={`/tax-tasks/${task.id}/edit`} className="text-xs text-blue-600 hover:text-blue-700 font-medium">
-                          Editar
-                        </Link>
-                        <form action={deleteTask}>
+                    <Card
+                      key={task.id}
+                      className={isOverdue ? 'border-destructive/50 bg-destructive/5' : ''}
+                    >
+                      <CardContent className="flex items-center gap-4 py-4">
+                        <form action={toggleStatus}>
                           <input type="hidden" name="id" value={task.id} />
-                          <button type="submit" className="text-xs text-red-500 hover:text-red-600 font-medium"
-                            onClick={e => { if (!confirm('¿Eliminar esta tarea?')) e.preventDefault() }}>
-                            Eliminar
-                          </button>
+                          <input type="hidden" name="status" value={task.status} />
+                          <button
+                            type="submit"
+                            className="flex h-5 w-5 items-center justify-center rounded border-2 border-input hover:border-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            aria-label={`Marcar "${task.title}" como completada`}
+                          />
                         </form>
-                      </div>
-                    </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-medium">{task.title}</span>
+                            <Badge
+                              variant={task.category === 'other' ? 'secondary' : 'outline'}
+                              className={categoryBadgeVariant(task.category as TaxCategory)}
+                            >
+                              {task.category === 'other' ? 'Otro' : task.category}
+                            </Badge>
+                            {isOverdue && (
+                              <Badge variant="destructive" className="gap-1">
+                                <AlertTriangle className="h-3 w-3" aria-hidden="true" />
+                                Vencida
+                              </Badge>
+                            )}
+                          </div>
+                          {task.notes && (
+                            <p className="text-sm text-muted-foreground mt-0.5">{task.notes}</p>
+                          )}
+                        </div>
+                        <span className={cn(
+                          'text-sm font-medium shrink-0',
+                          isOverdue ? 'text-destructive' : 'text-muted-foreground'
+                        )}>
+                          {formatDateES(task.due_date)}
+                        </span>
+                        <TaxTaskActions taskId={task.id} taskTitle={task.title} deleteAction={deleteTask} />
+                      </CardContent>
+                    </Card>
                   )
                 })}
               </div>
-            </div>
+            </section>
+          )}
+
+          {pending.length > 0 && done.length > 0 && (
+            <Separator />
           )}
 
           {done.length > 0 && (
-            <div>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase mb-3">Completadas ({done.length})</h2>
+            <section aria-label="Tareas completadas">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase mb-3">
+                Completadas ({done.length})
+              </h2>
               <div className="space-y-2">
                 {done.map(task => (
-                  <div key={task.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 opacity-60">
-                    <form action={toggleStatus}>
-                      <input type="hidden" name="id" value={task.id} />
-                      <input type="hidden" name="status" value={task.status} />
-                      <button type="submit" className="w-5 h-5 rounded border-2 border-green-500 bg-green-500 flex items-center justify-center text-white text-xs flex-shrink-0">
-                        ✓
-                      </button>
-                    </form>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-gray-700 line-through">{task.title}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${categoryColors[task.category as TaxCategory]}`}>
-                          {task.category}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-400 flex-shrink-0">{task.due_date}</div>
-                    <div className="flex gap-2">
-                      <Link href={`/tax-tasks/${task.id}/edit`} className="text-xs text-blue-600 hover:text-blue-700 font-medium">
-                        Editar
-                      </Link>
-                      <form action={deleteTask}>
+                  <Card key={task.id} className="opacity-60">
+                    <CardContent className="flex items-center gap-4 py-4">
+                      <form action={toggleStatus}>
                         <input type="hidden" name="id" value={task.id} />
-                        <button type="submit" className="text-xs text-red-500 hover:text-red-600 font-medium"
-                          onClick={e => { if (!confirm('¿Eliminar esta tarea?')) e.preventDefault() }}>
-                          Eliminar
+                        <input type="hidden" name="status" value={task.status} />
+                        <button
+                          type="submit"
+                          className="flex h-5 w-5 items-center justify-center rounded border-2 border-primary bg-primary text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          aria-label={`Marcar "${task.title}" como pendiente`}
+                        >
+                          <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
                         </button>
                       </form>
-                    </div>
-                  </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium text-muted-foreground line-through">
+                            {task.title}
+                          </span>
+                          <Badge
+                            variant={task.category === 'other' ? 'secondary' : 'outline'}
+                            className={categoryBadgeVariant(task.category as TaxCategory)}
+                          >
+                            {task.category === 'other' ? 'Otro' : task.category}
+                          </Badge>
+                        </div>
+                      </div>
+                      <span className="text-sm text-muted-foreground shrink-0">
+                        {formatDateES(task.due_date)}
+                      </span>
+                      <TaxTaskActions taskId={task.id} taskTitle={task.title} deleteAction={deleteTask} />
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            </div>
+            </section>
           )}
         </div>
       )}

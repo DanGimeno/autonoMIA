@@ -1,4 +1,4 @@
-# autonomIA
+# autonoMIA
 
 A web app for Spanish freelancers (autónomos) to organize projects, daily work logs, invoices, and tax-related tasks.
 

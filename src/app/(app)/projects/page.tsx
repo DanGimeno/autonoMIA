@@ -1,7 +1,18 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { revalidatePath } from 'next/cache'
 import { ProjectStatus } from '@/types'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Plus, Pencil, FolderOpen } from 'lucide-react'
+import DeleteProjectButton from '@/components/DeleteProjectButton'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Proyectos | autonoMIA',
+}
 
 async function deleteProject(formData: FormData) {
   'use server'
@@ -17,90 +28,114 @@ const statusLabels: Record<ProjectStatus, string> = {
   completed: 'Completado',
 }
 
-const statusColors: Record<ProjectStatus, string> = {
-  active: 'bg-green-100 text-green-700',
-  paused: 'bg-yellow-100 text-yellow-700',
-  completed: 'bg-gray-100 text-gray-700',
+const statusVariants: Record<ProjectStatus, 'default' | 'secondary' | 'outline'> = {
+  active: 'default',
+  paused: 'secondary',
+  completed: 'outline',
+}
+
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 export default async function ProjectsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/login')
+
   const { data: projects } = await supabase
     .from('projects')
     .select('*')
-    .eq('user_id', user!.id)
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   return (
-    <div>
+    <section aria-labelledby="projects-heading">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Proyectos</h1>
-          <p className="text-gray-500 mt-1">Gestiona tus proyectos de cliente</p>
+          <h1 id="projects-heading" className="text-2xl font-bold tracking-tight">
+            Proyectos
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Gestiona tus proyectos de cliente
+          </p>
         </div>
-        <Link
-          href="/projects/new"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-        >
-          + Nuevo proyecto
-        </Link>
+        <Button asChild>
+          <Link href="/projects/new">
+            <Plus className="size-4" />
+            Nuevo proyecto
+          </Link>
+        </Button>
       </div>
 
       {!projects || projects.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 shadow-sm border border-gray-100 text-center">
-          <div className="text-5xl mb-4">📁</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No hay proyectos todavía</h3>
-          <p className="text-gray-500 mb-4">Crea tu primer proyecto para empezar</p>
-          <Link href="/projects/new" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-            Crear proyecto
-          </Link>
-        </div>
+        <Card className="text-center py-12">
+          <CardContent className="flex flex-col items-center gap-4">
+            <FolderOpen className="size-12 text-muted-foreground" aria-hidden="true" />
+            <div>
+              <h3 className="text-lg font-medium mb-1">No hay proyectos todavia</h3>
+              <p className="text-muted-foreground mb-4">
+                Crea tu primer proyecto para empezar
+              </p>
+            </div>
+            <Button asChild>
+              <Link href="/projects/new">
+                <Plus className="size-4" />
+                Crear proyecto
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
-            <div key={project.id} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold text-gray-900">{project.name}</h3>
+            <Card key={project.id}>
+              <CardHeader className="flex-row items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <CardTitle className="truncate">{project.name}</CardTitle>
                   {project.client_name && (
-                    <p className="text-sm text-gray-500">{project.client_name}</p>
+                    <CardDescription>{project.client_name}</CardDescription>
                   )}
                 </div>
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${statusColors[project.status as ProjectStatus]}`}>
+                <Badge variant={statusVariants[project.status as ProjectStatus]}>
                   {statusLabels[project.status as ProjectStatus]}
-                </span>
-              </div>
-              {project.description && (
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.description}</p>
-              )}
-              {project.hourly_rate && (
-                <p className="text-sm text-gray-500 mb-3">€{project.hourly_rate}/h</p>
-              )}
-              <div className="flex gap-2 mt-4">
-                <Link
-                  href={`/projects/${project.id}/edit`}
-                  className="flex-1 text-center py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
-                >
-                  Editar
-                </Link>
-                <form action={deleteProject}>
-                  <input type="hidden" name="id" value={project.id} />
-                  <button
-                    type="submit"
-                    className="px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                    onClick={(e) => {
-                      if (!confirm('¿Eliminar este proyecto?')) e.preventDefault()
-                    }}
-                  >
-                    Eliminar
-                  </button>
-                </form>
-              </div>
-            </div>
+                </Badge>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {project.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {project.description}
+                  </p>
+                )}
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  {project.hourly_rate != null && (
+                    <span>{project.hourly_rate} &euro;/h</span>
+                  )}
+                  <span>Creado: {formatDate(project.created_at)}</span>
+                </div>
+              </CardContent>
+              <CardFooter className="gap-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/projects/${project.id}/edit`}>
+                    <Pencil className="size-4" />
+                    Editar
+                  </Link>
+                </Button>
+                <DeleteProjectButton
+                  projectName={project.name}
+                  deleteAction={deleteProject}
+                  projectId={project.id}
+                />
+              </CardFooter>
+            </Card>
           ))}
         </div>
       )}
-    </div>
+    </section>
   )
 }

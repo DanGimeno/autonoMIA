@@ -20,17 +20,29 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Middleware de autenticación para protección de rutas
 - `CLAUDE.md` con directivas del proyecto y guía de accesibilidad WCAG 2.2 AA+
 - Skills de Claude Code: `supabase-migration`, `new-feature`, `accessibility-audit`, `deploy-check`
-- Página de documentación con guidelines de desarrollo y accesibilidad
+- Página de documentación (`/docs`) con guidelines de desarrollo y accesibilidad
 - `CHANGELOG.md`
+- Migración UI completa a **shadcn/ui v4** + **Lucide React** (sustituye emojis y HTML crudo)
+- **Modo oscuro** con `next-themes` (claro/oscuro/sistema) con toggle en sidebar
+- **Paleta de colores** personalizada basada en Coolors: Dusk Blue, Cool Sky, Icy Blue, Blue Slate, Steel Blue
+- **Sistema i18n** ligero con soporte para castellano (es) y catalán (ca)
+- **Sistema de notificaciones** con campana en sidebar, dropdown de notificaciones, y polling
+- **Panel de administración** (`/admin`) para tareas programadas
+  - Campo `is_admin` en profiles para control de acceso
+  - Tabla `scheduled_tasks` para tareas automáticas con expresiones cron
+  - Tabla `task_executions` para historial de ejecuciones
+  - Tabla `notifications` con RLS por usuario
+- Loading skeletons (`loading.tsx`) en todas las rutas principales
+- Error boundary (`error.tsx`) compartido para la app
 
-### Por corregir (identificado en revisión)
-- Formularios no incluyen `user_id` en inserts (falta `DEFAULT auth.uid()` en schema)
-- `user!.id` sin null check en páginas server
-- Re-renders infinitos potenciales en componentes client (Supabase client como dependencia de hooks)
-- Calendario empieza en domingo (debería ser lunes para España)
-- Fechas sin formatear en español
-- Sin `loading.tsx` ni `error.tsx`
-- Emojis como iconos (pendiente migración a shadcn + Lucide)
+### Corregido
+
+- `DEFAULT auth.uid()` en todas las columnas `user_id` — los inserts del cliente ya no necesitan enviar `user_id`
+- Null checks para `user` en todas las páginas server (redirect a `/login`)
+- Re-renders infinitos: `createClient()` de Supabase movido fuera de los componentes
+- Calendario empieza en **lunes** (estándar español)
+- Constraint `UNIQUE(user_id, invoice_number)` en facturas
+- Columna `updated_at` con trigger automático en todas las tablas
 
 ## [0.1.0] — 2026-03-21
 
