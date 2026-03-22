@@ -125,11 +125,33 @@ Toda feature, componente y página debe cumplir WCAG 2.2 nivel AA como mínimo. 
 ## Comandos
 
 ```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Build de producción
-npm run lint     # ESLint
-npx supabase     # CLI de Supabase (requiere Docker)
+npm run dev          # Servidor de desarrollo
+npm run build        # Build de producción
+npm run build:mcp    # Build del servidor MCP
+npm run lint         # ESLint
 ```
+
+### Supabase CLI (requiere Docker Desktop activo)
+
+```bash
+npx supabase migration new <nombre>   # Crear nueva migración vacía en supabase/migrations/
+npx supabase db push                  # Aplicar migraciones pendientes al Supabase remoto
+npx supabase db pull                  # Descargar schema remoto como migración
+npx supabase db reset                 # Resetear DB local (ejecuta migraciones + seed)
+npx supabase start                    # Arrancar Supabase local (Studio en :54323)
+npx supabase stop                     # Parar Supabase local
+```
+
+**Flujo para cambios de schema:**
+
+1. Crear migración: `npx supabase migration new <nombre_descriptivo>`
+2. Escribir el SQL en el fichero generado en `supabase/migrations/`
+3. Mantener `supabase/schema.sql` actualizado como referencia completa
+4. Aplicar a remoto: `npx supabase db push`
+
+## Changelog
+
+Todo cambio debe documentarse en `CHANGELOG.md` siguiendo el formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/). Categorías: Added, Changed, Fixed, Removed. Cada entrada incluye la fecha y una descripción breve del cambio. No omitir este paso al finalizar una tarea.
 
 ## Variables de entorno
 

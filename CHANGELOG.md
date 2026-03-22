@@ -35,6 +35,16 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - Loading skeletons (`loading.tsx`) en todas las rutas principales
 - Error boundary (`error.tsx`) compartido para la app
 
+- **Servidor MCP** (`src/mcp/`) con transporte stdio para conectar asistentes IA (Claude Desktop, etc.)
+  - 8 tools read-only: get_profile, list_clients, list_projects, list_invoices, list_work_logs, list_expenses, get_tax_summary, list_tax_tasks
+  - 2 resources: profile://current, projects://active
+  - Autenticación por token personal con SHA-256
+- **Sistema de tokens de API** en página de Configuración
+  - Tabla `api_tokens` con RLS y hash SHA-256
+  - Server actions para crear/revocar tokens
+  - Componente `ApiTokensSection` con generación, copia y revocación
+- Build independiente para MCP: `npm run build:mcp` (`tsconfig.mcp.json`)
+
 ### Corregido
 
 - `DEFAULT auth.uid()` en todas las columnas `user_id` — los inserts del cliente ya no necesitan enviar `user_id`
