@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import SettingsForm from '@/components/SettingsForm'
+import ApiTokensSection from '@/components/ApiTokensSection'
+import { getApiTokens } from './actions'
 import type { Metadata } from 'next'
 import { HelpDialog } from '@/components/HelpDialog'
 import { helpContent } from '@/lib/help/content'
@@ -15,7 +17,10 @@ export default async function SettingsPage() {
 
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+  const [{ data: profile }, tokens] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', user.id).single(),
+    getApiTokens(),
+  ])
 
   return (
     <div>
@@ -27,6 +32,7 @@ export default async function SettingsPage() {
         <p className="text-muted-foreground mt-1">Gestiona tu perfil y datos fiscales</p>
       </div>
       <SettingsForm profile={profile} userEmail={user.email} />
+      <ApiTokensSection initialTokens={tokens} />
     </div>
   )
 }

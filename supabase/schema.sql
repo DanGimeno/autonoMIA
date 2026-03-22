@@ -455,6 +455,37 @@ create policy "Admins can view task executions" on task_executions for select
   using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
 
 -- ============================================================
+-- API TOKENS (para MCP y integraciones externas)
+-- ============================================================
+create table if not exists api_tokens (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users on delete cascade not null default auth.uid(),
+  name text not null,                        -- ej: "Claude Desktop"
+  token_hash text not null,                  -- SHA-256 del token
+  token_prefix text not null,               -- Primeros 8 chars para identificación
+  last_used_at timestamptz,
+  expires_at timestamptz,                   -- null = no expira
+  revoked_at timestamptz,                   -- null = activo
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create or replace trigger api_tokens_updated_at
+  before update on api_tokens
+  for each row execute function public.update_updated_at();
+
+alter table api_tokens enable row level security;
+
+create policy "Users can view own tokens" on api_tokens
+  for select using (auth.uid() = user_id);
+create policy "Users can insert own tokens" on api_tokens
+  for insert with check (auth.uid() = user_id);
+create policy "Users can update own tokens" on api_tokens
+  for update using (auth.uid() = user_id);
+create policy "Users can delete own tokens" on api_tokens
+  for delete using (auth.uid() = user_id);
+
+-- ============================================================
 -- Auto-create profile on signup
 -- ============================================================
 create or replace function public.handle_new_user()
