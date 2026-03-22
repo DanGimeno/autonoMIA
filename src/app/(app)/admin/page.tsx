@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/table'
 import { Shield, CheckCircle2, XCircle, Play } from 'lucide-react'
 import { AdminTaskActions } from '@/components/AdminTaskActions'
+import { RunTaskButton } from '@/components/RunTaskButton'
 import { HelpDialog } from '@/components/HelpDialog'
 import { helpContent } from '@/lib/help/content'
+import { describeCron } from '@/lib/cron'
 
 export const metadata: Metadata = {
   title: 'Administración | autonoMIA',
@@ -118,6 +120,7 @@ export default async function AdminPage() {
                     <TableHead scope="col">Estado</TableHead>
                     <TableHead scope="col">Última ejecución</TableHead>
                     <TableHead scope="col">Próxima ejecución</TableHead>
+                    <TableHead scope="col">Acción</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -135,7 +138,10 @@ export default async function AdminPage() {
                         <Badge variant="secondary">{task.task_type.replace(/_/g, ' ')}</Badge>
                       </TableCell>
                       <TableCell>
-                        <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{task.cron_expression}</code>
+                        <div>
+                          <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{task.cron_expression}</code>
+                          <div className="text-xs text-muted-foreground mt-1">{describeCron(task.cron_expression)}</div>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge variant={task.enabled ? 'default' : 'secondary'}>
@@ -147,6 +153,9 @@ export default async function AdminPage() {
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(task.next_run_at)}
+                      </TableCell>
+                      <TableCell>
+                        <RunTaskButton taskId={task.id} taskName={task.name} />
                       </TableCell>
                     </TableRow>
                   ))}
